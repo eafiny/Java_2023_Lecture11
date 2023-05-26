@@ -2,6 +2,7 @@ package ru.muctr.PRELibrary.services;
 
 import net.bytebuddy.dynamic.DynamicType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -50,5 +51,9 @@ public class PrepodService {
         Prepod prepod = prepodRepository.findById(id).get();
         prepod.setSalary(newSalary);
         //commit
+    }
+
+    public Page<Prepod> findPage(int page, int pageSize) {
+        return prepodRepository.findAllBy(PageRequest.of(page, pageSize));
     }
 }

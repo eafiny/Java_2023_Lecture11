@@ -1,5 +1,7 @@
 package ru.muctr.PRELibrary.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import ru.muctr.PRELibrary.models.Prepod;
@@ -15,4 +17,6 @@ public interface PrepodRepository extends JpaRepository<Prepod, Integer> {
     List<Prepod> findAllBySalaryLessThan(int salary);
     List<Prepod> findAllBySalaryBetween(int minSalary, int maxSalary);
     List<Prepod> findAllBySalaryGreaterThanAndNameStartsWith(int minSalary, String startString);
+
+    Page<Prepod> findAllBy(Pageable pageable);
 }
