@@ -1,6 +1,7 @@
 package ru.muctr.PRELibrary.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -11,12 +12,14 @@ import ru.muctr.PRELibrary.errorHandling.ResourceNotFoundException;
 import ru.muctr.PRELibrary.models.Prepod;
 import ru.muctr.PRELibrary.services.PrepodService;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  * @author Evgenia Skichko
  */
 @RestController
+@RequestMapping("/prepods")
 public class PrepodController {
     PrepodService prepodService;
 
@@ -25,12 +28,17 @@ public class PrepodController {
         this.prepodService = prepodService;
     }
 
-    @GetMapping("/prepods/{id}")
+    @GetMapping("/{id}")
     public Prepod getPrepod(@PathVariable Integer id){
         return prepodService.findPrepodById(id).orElseThrow(() -> new ResourceNotFoundException("Преподаватель с id " + id + "не существует"));
     }
 
-    @PostMapping("/prepods")
+    @GetMapping
+    public Page<Prepod> getPrepodList(@RequestParam(name = "p", defaultValue = "1") int page){
+        return prepodService.findPage(page - 1, 3);
+    }
+
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Prepod createNewPrepod(@RequestBody @Validated Prepod prepod, BindingResult bindingResult) {
         if (bindingResult.hasErrors()){
@@ -39,12 +47,12 @@ public class PrepodController {
         return prepodService.save(prepod);
     }
 
-    @DeleteMapping("/prepods/{id}")
+    @DeleteMapping("/{id}")
     public void deletePrepod(@PathVariable Integer id){
         prepodService.deletePrepodById(id);
     }
 
-    @GetMapping("/prepods/test")
+    @GetMapping("/test")
     public Object getTestData(){
         return prepodService.getTestData();
     }
@@ -55,7 +63,7 @@ public class PrepodController {
         return "Обновлено успешно";
     }
 
-    @PutMapping("/prepods")
+    @PutMapping
     public Prepod updatePrepod2(@RequestBody Prepod prepod){
         return prepodService.save(prepod);
     }
